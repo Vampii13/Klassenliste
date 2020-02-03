@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="KlassenlisteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Klasse">
+          <Key>
+            <PropertyRef Name="IdKlasse" />
+          </Key>
+          <Property Name="IdKlasse" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Bezeichnung" Type="varchar" MaxLength="64" />
+          <Property Name="Kuerzel" Type="varchar" MaxLength="3" />
+          <Property Name="Jahr" Type="int" />
+        </EntityType>
+        <EntityType Name="Kurs">
+          <Key>
+            <PropertyRef Name="IdKurs" />
+          </Key>
+          <Property Name="IdKurs" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Bezeichnung" Type="varchar" MaxLength="45" />
+          <Property Name="Kuerzel" Type="varchar" MaxLength="4" />
+        </EntityType>
+        <EntityType Name="Teilnehmer">
+          <Key>
+            <PropertyRef Name="IdTeilnehmer" />
+          </Key>
+          <Property Name="IdTeilnehmer" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="64" />
+          <Property Name="Vorname" Type="varchar" MaxLength="64" />
+          <Property Name="Email" Type="varchar" MaxLength="64" />
+          <Property Name="Geburtsdatum" Type="datetime" />
+          <Property Name="Klasse_IdKlasse" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Teilnehmer_has_Kurs">
+          <Key>
+            <PropertyRef Name="IdTeilnehmerKurs" />
+          </Key>
+          <Property Name="IdTeilnehmerKurs" Type="int" Nullable="false" />
+          <Property Name="IdTeilnehmer" Type="int" Nullable="false" />
+          <Property Name="IdKurs" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Teilnehmer_has_Kurs_Kurs">
+          <End Role="Kurs" Type="Self.Kurs" Multiplicity="1" />
+          <End Role="Teilnehmer_has_Kurs" Type="Self.Teilnehmer_has_Kurs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kurs">
+              <PropertyRef Name="IdKurs" />
+            </Principal>
+            <Dependent Role="Teilnehmer_has_Kurs">
+              <PropertyRef Name="IdKurs" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Teilnehmer_has_Kurs_Teilnehmer">
+          <End Role="Teilnehmer" Type="Self.Teilnehmer" Multiplicity="1" />
+          <End Role="Teilnehmer_has_Kurs" Type="Self.Teilnehmer_has_Kurs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teilnehmer">
+              <PropertyRef Name="IdTeilnehmer" />
+            </Principal>
+            <Dependent Role="Teilnehmer_has_Kurs">
+              <PropertyRef Name="IdTeilnehmer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Teilnehmer_Klasse">
+          <End Role="Klasse" Type="Self.Klasse" Multiplicity="1" />
+          <End Role="Teilnehmer" Type="Self.Teilnehmer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Klasse">
+              <PropertyRef Name="IdKlasse" />
+            </Principal>
+            <Dependent Role="Teilnehmer">
+              <PropertyRef Name="Klasse_IdKlasse" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KlassenlisteModelStoreContainer">
+          <EntitySet Name="Klasse" EntityType="Self.Klasse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Kurs" EntityType="Self.Kurs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Teilnehmer" EntityType="Self.Teilnehmer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Teilnehmer_has_Kurs" EntityType="Self.Teilnehmer_has_Kurs" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Teilnehmer_has_Kurs_Kurs" Association="Self.FK_Teilnehmer_has_Kurs_Kurs">
+            <End Role="Kurs" EntitySet="Kurs" />
+            <End Role="Teilnehmer_has_Kurs" EntitySet="Teilnehmer_has_Kurs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teilnehmer_has_Kurs_Teilnehmer" Association="Self.FK_Teilnehmer_has_Kurs_Teilnehmer">
+            <End Role="Teilnehmer" EntitySet="Teilnehmer" />
+            <End Role="Teilnehmer_has_Kurs" EntitySet="Teilnehmer_has_Kurs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teilnehmer_Klasse" Association="Self.FK_Teilnehmer_Klasse">
+            <End Role="Klasse" EntitySet="Klasse" />
+            <End Role="Teilnehmer" EntitySet="Teilnehmer" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="KlassenlisteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="KlassenlisteEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Klasse" EntityType="KlassenlisteModel.Klasse" />
+          <EntitySet Name="Kurs" EntityType="KlassenlisteModel.Kurs" />
+          <EntitySet Name="Teilnehmer" EntityType="KlassenlisteModel.Teilnehmer" />
+          <EntitySet Name="Teilnehmer_has_Kurs" EntityType="KlassenlisteModel.Teilnehmer_has_Kurs" />
+          <AssociationSet Name="FK_Teilnehmer_Klasse" Association="KlassenlisteModel.FK_Teilnehmer_Klasse">
+            <End Role="Klasse" EntitySet="Klasse" />
+            <End Role="Teilnehmer" EntitySet="Teilnehmer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teilnehmer_has_Kurs_Kurs" Association="KlassenlisteModel.FK_Teilnehmer_has_Kurs_Kurs">
+            <End Role="Kurs" EntitySet="Kurs" />
+            <End Role="Teilnehmer_has_Kurs" EntitySet="Teilnehmer_has_Kurs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teilnehmer_has_Kurs_Teilnehmer" Association="KlassenlisteModel.FK_Teilnehmer_has_Kurs_Teilnehmer">
+            <End Role="Teilnehmer" EntitySet="Teilnehmer" />
+            <End Role="Teilnehmer_has_Kurs" EntitySet="Teilnehmer_has_Kurs" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Klasse">
+          <Key>
+            <PropertyRef Name="IdKlasse" />
+          </Key>
+          <Property Name="IdKlasse" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Bezeichnung" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Kuerzel" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Jahr" Type="Int32" />
+          <NavigationProperty Name="Teilnehmer" Relationship="KlassenlisteModel.FK_Teilnehmer_Klasse" FromRole="Klasse" ToRole="Teilnehmer" />
+        </EntityType>
+        <EntityType Name="Kurs">
+          <Key>
+            <PropertyRef Name="IdKurs" />
+          </Key>
+          <Property Name="IdKurs" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Bezeichnung" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Kuerzel" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Teilnehmer_has_Kurs" Relationship="KlassenlisteModel.FK_Teilnehmer_has_Kurs_Kurs" FromRole="Kurs" ToRole="Teilnehmer_has_Kurs" />
+        </EntityType>
+        <EntityType Name="Teilnehmer">
+          <Key>
+            <PropertyRef Name="IdTeilnehmer" />
+          </Key>
+          <Property Name="IdTeilnehmer" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Vorname" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Geburtsdatum" Type="DateTime" Precision="3" />
+          <Property Name="Klasse_IdKlasse" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Klasse" Relationship="KlassenlisteModel.FK_Teilnehmer_Klasse" FromRole="Teilnehmer" ToRole="Klasse" />
+          <NavigationProperty Name="Teilnehmer_has_Kurs" Relationship="KlassenlisteModel.FK_Teilnehmer_has_Kurs_Teilnehmer" FromRole="Teilnehmer" ToRole="Teilnehmer_has_Kurs" />
+        </EntityType>
+        <EntityType Name="Teilnehmer_has_Kurs">
+          <Key>
+            <PropertyRef Name="IdTeilnehmerKurs" />
+          </Key>
+          <Property Name="IdTeilnehmerKurs" Type="Int32" Nullable="false" />
+          <Property Name="IdTeilnehmer" Type="Int32" Nullable="false" />
+          <Property Name="IdKurs" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Kurs" Relationship="KlassenlisteModel.FK_Teilnehmer_has_Kurs_Kurs" FromRole="Teilnehmer_has_Kurs" ToRole="Kurs" />
+          <NavigationProperty Name="Teilnehmer" Relationship="KlassenlisteModel.FK_Teilnehmer_has_Kurs_Teilnehmer" FromRole="Teilnehmer_has_Kurs" ToRole="Teilnehmer" />
+        </EntityType>
+        <Association Name="FK_Teilnehmer_Klasse">
+          <End Type="KlassenlisteModel.Klasse" Role="Klasse" Multiplicity="1" />
+          <End Type="KlassenlisteModel.Teilnehmer" Role="Teilnehmer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Klasse">
+              <PropertyRef Name="IdKlasse" />
+            </Principal>
+            <Dependent Role="Teilnehmer">
+              <PropertyRef Name="Klasse_IdKlasse" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Teilnehmer_has_Kurs_Kurs">
+          <End Type="KlassenlisteModel.Kurs" Role="Kurs" Multiplicity="1" />
+          <End Type="KlassenlisteModel.Teilnehmer_has_Kurs" Role="Teilnehmer_has_Kurs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kurs">
+              <PropertyRef Name="IdKurs" />
+            </Principal>
+            <Dependent Role="Teilnehmer_has_Kurs">
+              <PropertyRef Name="IdKurs" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Teilnehmer_has_Kurs_Teilnehmer">
+          <End Type="KlassenlisteModel.Teilnehmer" Role="Teilnehmer" Multiplicity="1" />
+          <End Type="KlassenlisteModel.Teilnehmer_has_Kurs" Role="Teilnehmer_has_Kurs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teilnehmer">
+              <PropertyRef Name="IdTeilnehmer" />
+            </Principal>
+            <Dependent Role="Teilnehmer_has_Kurs">
+              <PropertyRef Name="IdTeilnehmer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="KlassenlisteModelStoreContainer" CdmEntityContainer="KlassenlisteEntities">
+          <EntitySetMapping Name="Klasse">
+            <EntityTypeMapping TypeName="KlassenlisteModel.Klasse">
+              <MappingFragment StoreEntitySet="Klasse">
+                <ScalarProperty Name="Jahr" ColumnName="Jahr" />
+                <ScalarProperty Name="Kuerzel" ColumnName="Kuerzel" />
+                <ScalarProperty Name="Bezeichnung" ColumnName="Bezeichnung" />
+                <ScalarProperty Name="IdKlasse" ColumnName="IdKlasse" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kurs">
+            <EntityTypeMapping TypeName="KlassenlisteModel.Kurs">
+              <MappingFragment StoreEntitySet="Kurs">
+                <ScalarProperty Name="Kuerzel" ColumnName="Kuerzel" />
+                <ScalarProperty Name="Bezeichnung" ColumnName="Bezeichnung" />
+                <ScalarProperty Name="IdKurs" ColumnName="IdKurs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teilnehmer">
+            <EntityTypeMapping TypeName="KlassenlisteModel.Teilnehmer">
+              <MappingFragment StoreEntitySet="Teilnehmer">
+                <ScalarProperty Name="Klasse_IdKlasse" ColumnName="Klasse_IdKlasse" />
+                <ScalarProperty Name="Geburtsdatum" ColumnName="Geburtsdatum" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Vorname" ColumnName="Vorname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IdTeilnehmer" ColumnName="IdTeilnehmer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teilnehmer_has_Kurs">
+            <EntityTypeMapping TypeName="KlassenlisteModel.Teilnehmer_has_Kurs">
+              <MappingFragment StoreEntitySet="Teilnehmer_has_Kurs">
+                <ScalarProperty Name="IdKurs" ColumnName="IdKurs" />
+                <ScalarProperty Name="IdTeilnehmer" ColumnName="IdTeilnehmer" />
+                <ScalarProperty Name="IdTeilnehmerKurs" ColumnName="IdTeilnehmerKurs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Kein" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
